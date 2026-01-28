@@ -312,6 +312,22 @@ function retry() {
     showScreen('intro');
 }
 
+// 링크 복사
+function copyLink() {
+    const url = 'https://matbamn.github.io/life-hedge-simulator-/viral/';
+    navigator.clipboard.writeText(url).then(() => {
+        // 버튼 텍스트 변경으로 피드백
+        const btn = document.querySelector('.btn-share');
+        const original = btn.textContent;
+        btn.textContent = '✅ 복사 완료!';
+        setTimeout(() => {
+            btn.textContent = original;
+        }, 2000);
+    }).catch(err => {
+        // 폴백: 프롬프트로 보여주기
+        prompt('링크를 복사하세요:', url);
+    });
+}
 // Instagram Story 저장
 function saveInstaStory() {
     const instaCard = document.getElementById('instaCard');
