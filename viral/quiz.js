@@ -194,10 +194,10 @@ function calculateResult() {
         riskPercent = Math.min(riskPercent * 1.5, 25);
     }
 
-    // 치료 중간 시점 나이 기준 연령대 계산
-    const treatmentMidpointAge = answers.age + Math.floor(diseaseData.treatmentMonths / 2 / 12);
+    // 피크 시기 + 치료 중간 시점 기준 연령대 계산 (발병 확률 높은 시점 기준)
+    const treatmentMidpointAge = peakAge + Math.floor(diseaseData.treatmentMonths / 2 / 12);
     const incomeAgeGroup = Math.floor(treatmentMidpointAge / 10) * 10;
-    const medianIncome = MEDIAN_INCOME[incomeAgeGroup] || MEDIAN_INCOME[40];
+    const medianIncome = MEDIAN_INCOME[incomeAgeGroup] || MEDIAN_INCOME[50];
 
     // 직접 비용: 치료비 + 간병비 (인플레이션 반영)
     const yearsToRisk = Math.max(peakAge - answers.age, 0);
@@ -247,7 +247,7 @@ function showResult() {
         document.getElementById('indirectCost').textContent = `${result.indirectCost.toLocaleString()}만원`;
         document.getElementById('totalCost').textContent = `${result.totalCost.toLocaleString()}만원`;
         document.getElementById('treatmentInfo').textContent =
-            `${result.treatmentMonths}개월 기준, ${result.incomeAgeGroup}대 중위소득 ${result.medianIncome}만원/월`;
+            `${result.treatmentMonths}개월 기준, ${result.incomeAgeGroup}대 중위소득`;
 
         document.getElementById('defensePercent').textContent = `${result.defensePercent}%`;
         document.getElementById('defenseFill').style.width = `${result.defensePercent}%`;
