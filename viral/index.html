@@ -18,13 +18,13 @@
         <div class="intro-emoji">🛡️</div>
         <h1>내 건강 방어 유형은?</h1>
         <p class="intro-desc">
-          3개의 질문으로 알아보는<br>
+          5개의 질문으로 알아보는<br>
           나의 건강 리스크 & 방어력 테스트
         </p>
         <div class="intro-tags">
-          <span class="tag">🎮 MBTI 스타일</span>
+          <span class="tag">🎮 건강 방어 유형</span>
           <span class="tag">📊 실제 데이터</span>
-          <span class="tag">⏱️ 30초</span>
+          <span class="tag">⏱️ 1분</span>
         </div>
         <button class="btn-start" onclick="startQuiz()">시작하기 →</button>
         <p class="intro-note">데이터 출처: HIRA 보건의료빅데이터 (2024)</p>
@@ -34,7 +34,7 @@
     <!-- Question 1: Gender & Age -->
     <div id="q1" class="screen question-screen">
       <div class="progress-bar">
-        <div class="progress" style="width: 33%"></div>
+        <div class="progress" style="width: 20%"></div>
       </div>
       <div class="question-content">
         <span class="q-number">Q1</span>
@@ -46,7 +46,8 @@
         <div class="age-input">
           <label>현재 나이</label>
           <div class="age-input-wrapper">
-            <input type="number" id="ageInput" placeholder="예: 35" min="20" max="80" value="40">
+            <input type="number" id="ageInput" placeholder="예: 35" min="0" max="99" value="40"
+              oninput="validateAge(this)">
             <span class="age-unit">세</span>
           </div>
         </div>
@@ -57,7 +58,7 @@
     <!-- Question 2: Family History -->
     <div id="q2" class="screen question-screen">
       <div class="progress-bar">
-        <div class="progress" style="width: 66%"></div>
+        <div class="progress" style="width: 40%"></div>
       </div>
       <div class="question-content">
         <span class="q-number">Q2</span>
@@ -79,7 +80,7 @@
     <!-- Question 3: Current Defense -->
     <div id="q3" class="screen question-screen">
       <div class="progress-bar">
-        <div class="progress" style="width: 100%"></div>
+        <div class="progress" style="width: 60%"></div>
       </div>
       <div class="question-content">
         <span class="q-number">Q3</span>
@@ -91,6 +92,48 @@
           <button class="budget-btn" data-value="50" onclick="selectBudget(this)">20~50만원</button>
           <button class="budget-btn" data-value="100" onclick="selectBudget(this)">50만원 이상 💪</button>
         </div>
+        <button class="btn-next" onclick="nextQuestion(3)" disabled>다음 →</button>
+      </div>
+    </div>
+
+    <!-- Question 4: Time Orientation (NEW) -->
+    <div id="q4" class="screen question-screen">
+      <div class="progress-bar">
+        <div class="progress" style="width: 80%"></div>
+      </div>
+      <div class="question-content">
+        <span class="q-number">Q4</span>
+        <h2>주로 걱정되는 시기는?</h2>
+        <p class="q-hint">건강 리스크가 더 신경 쓰이는 시기를 선택해주세요</p>
+        <div class="budget-options">
+          <button class="time-btn" data-value="short" onclick="selectTime(this)">
+            🏃 40~50대<br><small>일하는 동안 발생할 리스크</small>
+          </button>
+          <button class="time-btn" data-value="long" onclick="selectTime(this)">
+            🧓 60대 이후<br><small>은퇴 후 노후 건강</small>
+          </button>
+        </div>
+        <button class="btn-next" onclick="nextQuestion(4)" disabled>다음 →</button>
+      </div>
+    </div>
+
+    <!-- Question 5: Financial Preference (NEW) -->
+    <div id="q5" class="screen question-screen">
+      <div class="progress-bar">
+        <div class="progress" style="width: 100%"></div>
+      </div>
+      <div class="question-content">
+        <span class="q-number">Q5</span>
+        <h2>어떤 준비 방식이 더 끌리나요?</h2>
+        <p class="q-hint">리스크 대비 방식 선호도</p>
+        <div class="budget-options">
+          <button class="finance-btn" data-value="stable" onclick="selectFinance(this)">
+            🛡️ 확정 보장<br><small>적더라도 확실하게</small>
+          </button>
+          <button class="finance-btn" data-value="aggressive" onclick="selectFinance(this)">
+            📈 투자 수익<br><small>리스크 있지만 더 크게</small>
+          </button>
+        </div>
         <button class="btn-next" onclick="showResult()" disabled>결과 보기 🎉</button>
       </div>
     </div>
@@ -99,7 +142,7 @@
     <div id="loading" class="screen">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <p>분석 중...</p>
+        <p>당신의 건강 방어 유형 분석 중...</p>
         <p class="loading-sub">HIRA 데이터 기반으로 계산 중이에요</p>
       </div>
     </div>
@@ -113,7 +156,6 @@
         <div class="result-type">
           <span class="type-emoji" id="typeEmoji">⚖️</span>
           <h2 class="type-name" id="typeName">PREP형</h2>
-          <p class="type-desc" id="typeDesc">준비된 현실주의자</p>
         </div>
         <div class="result-data">
           <div class="data-row">
@@ -126,11 +168,27 @@
             <span class="data-label">피크 시기</span>
             <span class="data-value" id="peakAge">58세 (12%)</span>
           </div>
-          <div class="data-row">
-            <span class="data-icon">💰</span>
-            <span class="data-label">예상 치료비</span>
-            <span class="data-value" id="expectedCost">8,500만원</span>
+          <p class="data-note">* 가족력 + 나이 기반, HIRA 2024 통계</p>
+        </div>
+
+        <!-- 비용 분석 섹션 -->
+        <div class="cost-section">
+          <div class="cost-row">
+            <span class="cost-label">💊 직접 비용</span>
+            <span class="cost-value" id="directCost">1,500만원</span>
+            <span class="cost-desc">치료비 + 간병비</span>
           </div>
+          <div class="cost-row">
+            <span class="cost-label">📉 간접 비용</span>
+            <span class="cost-value" id="indirectCost">6,000만원</span>
+            <span class="cost-desc">수입 중단 손실</span>
+          </div>
+          <div class="cost-divider"></div>
+          <div class="cost-row cost-total">
+            <span class="cost-label">💰 총 예상 비용</span>
+            <span class="cost-value" id="totalCost">7,500만원</span>
+          </div>
+          <p class="cost-note" id="treatmentInfo">18개월 기준, 450만원/월 평균소득</p>
         </div>
         <div class="defense-bar">
           <div class="defense-label">
@@ -147,10 +205,43 @@
         <p class="result-source">데이터: HIRA 보건의료빅데이터 (2024)</p>
       </div>
       <div class="result-actions">
-        <button class="btn-share" onclick="shareKakao()">📱 카카오톡 공유</button>
+        <button class="btn-insta" onclick="saveInstaStory()">📸 인스타 스토리 저장</button>
         <button class="btn-save" onclick="saveImage()">💾 이미지 저장</button>
         <button class="btn-detail" onclick="goToDetail()">📊 상세 분석 보기</button>
         <button class="btn-retry" onclick="retry()">🔄 다시 하기</button>
+      </div>
+    </div>
+
+    <!-- Hidden Instagram Story Card (1080x1920 ratio) -->
+    <div id="instaCard" class="insta-card">
+      <div class="insta-bg"></div>
+      <div class="insta-content">
+        <div class="insta-header">
+          <span class="insta-badge">🛡️ 내 건강 방어 유형</span>
+        </div>
+        <div class="insta-type">
+          <span class="insta-emoji" id="instaEmoji">🧘</span>
+          <h2 class="insta-type-name" id="instaTypeName">선제 방어러</h2>
+        </div>
+        <div class="insta-disease">
+          <p class="insta-label">주요 대비 질병</p>
+          <p class="insta-value" id="instaDisease">뇌혈관질환</p>
+        </div>
+        <div class="insta-cost">
+          <p class="insta-cost-label">예상 총 비용</p>
+          <p class="insta-cost-value" id="instaCost">1억 303만원</p>
+        </div>
+        <div class="insta-defense">
+          <p class="insta-defense-label">현재 방어력</p>
+          <div class="insta-defense-bar">
+            <div class="insta-defense-fill" id="instaDefenseFill"></div>
+          </div>
+          <p class="insta-defense-percent" id="instaDefensePercent">42%</p>
+        </div>
+        <div class="insta-footer">
+          <p>🔗 나도 테스트하기</p>
+          <p class="insta-source">HIRA 빅데이터 기반</p>
+        </div>
       </div>
     </div>
   </div>

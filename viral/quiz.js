@@ -1,29 +1,55 @@
-// Viral MVP - Health Defense Type Quiz Logic
+// Viral MVP - Health Defense Type Quiz Logic (16 Types Version)
 
 // User answers
 const answers = {
     gender: null,
     age: 40,
     familyHistory: [],
-    monthlyBudget: 0
+    monthlyBudget: 0,
+    timeOrientation: null,  // 'short' (T-) or 'long' (T+)
+    financePref: null       // 'stable' (F+) or 'aggressive' (F-)
 };
 
-// Disease risk data (simplified from HIRA data)
+// Disease risk data with realistic cost breakdown
+// 직접비용: 치료비+간병비 (산정특례 적용)
+// 치료기간: 통계 기준 평균 (개월)
 const DISEASE_DATA = {
-    '위암': { peakAge: 65, riskPercent: 8, avgCost: 6500 },
-    '대장암': { peakAge: 68, riskPercent: 10, avgCost: 7200 },
-    '폐암': { peakAge: 70, riskPercent: 7, avgCost: 9500 },
-    '뇌혈관질환': { peakAge: 58, riskPercent: 12, avgCost: 8500 },
-    '허혈성심질환': { peakAge: 55, riskPercent: 9, avgCost: 7800 },
-    '치매': { peakAge: 80, riskPercent: 15, avgCost: 12000 }
+    '위암': { peakAge: 65, riskPercent: 8, directCost: 2000, treatmentMonths: 12 },
+    '대장암': { peakAge: 68, riskPercent: 10, directCost: 1800, treatmentMonths: 10 },
+    '폐암': { peakAge: 70, riskPercent: 7, directCost: 2500, treatmentMonths: 12 },
+    '뇌혈관질환': { peakAge: 58, riskPercent: 12, directCost: 1500, treatmentMonths: 18 },
+    '허혈성심질환': { peakAge: 55, riskPercent: 9, directCost: 1200, treatmentMonths: 6 },
+    '치매': { peakAge: 80, riskPercent: 15, directCost: 1000, treatmentMonths: 60 } // 5년
 };
 
-// Type definitions
-const TYPES = {
-    SAFE: { emoji: '🛡️', name: 'SAFE형', desc: '철벽 방어러', tip: '완벽한 준비! 유지만 잘 하면 돼요 👍' },
-    PREP: { emoji: '⚖️', name: 'PREP형', desc: '준비된 현실주의자', tip: '피크 시기 전에 방어력 한번 점검해봐!' },
-    HOPE: { emoji: '🌈', name: 'HOPE형', desc: '긍정 에너지', tip: '괜찮겠지~ 하지만 작은 준비는 어때요?' },
-    YOLO: { emoji: '🎲', name: 'YOLO형', desc: '오늘을 사는 자', tip: '멋있긴 한데, 작은 방어막 하나 정도는?' }
+// 나이대별 월 중위소득 (통계청 가계금융복지조사 2024, 개인 근로소득 기준, 만원)
+const MEDIAN_INCOME = {
+    20: 220,  // 20대
+    30: 320,  // 30대
+    40: 350,  // 40대
+    50: 330,  // 50대
+    60: 250,  // 60대
+    70: 120   // 70대+
+};
+
+// 16 Type definitions (R/D/T/F)
+const TYPES_16 = {
+    'R+D+T+F+': { emoji: '🧤', name: '철벽 골키퍼', code: 'R+D+T+F+', tip: '완벽한 수비! 유지만 잘 하세요 👍', color: '#6bcb77' },
+    'R+D+T+F-': { emoji: '⚔️', name: '공격형 수비수', code: 'R+D+T+F-', tip: '투자로 더 크게 모아보세요!', color: '#4ecdc4' },
+    'R+D+T-F+': { emoji: '🎯', name: '선제 방어러', code: 'R+D+T-F+', tip: '조기 대비 완료! 잘하고 있어요', color: '#45b7d1' },
+    'R+D+T-F-': { emoji: '💹', name: '젊은 투자가', code: 'R+D+T-F-', tip: '시간이 편이에요, 투자 유지!', color: '#96ceb4' },
+    'R+D-T+F+': { emoji: '📝', name: '계획만 세움', code: 'R+D-T+F+', tip: '알고 계시니 이제 행동만!', color: '#ffeaa7' },
+    'R+D-T+F-': { emoji: '💭', name: '몽상가', code: 'R+D-T+F-', tip: '투자 꿈, 지금 시작해요!', color: '#dfe6e9' },
+    'R+D-T-F+': { emoji: '😰', name: '걱정만 함', code: 'R+D-T-F+', tip: '소액이라도 지금 시작!', color: '#fab1a0' },
+    'R+D-T-F-': { emoji: '🌈', name: '낙천 미루미', code: 'R+D-T-F-', tip: '괜찮겠지~ 하지만 작은 시작은?', color: '#fd79a8' },
+    'R-D+T+F+': { emoji: '🍀', name: '우연한 수비수', code: 'R-D+T+F+', tip: '잘 준비되어 있어요! 점검만', color: '#00b894' },
+    'R-D+T+F-': { emoji: '🎰', name: '행운의 투자가', code: 'R-D+T+F-', tip: '투자 잘하고 있어요!', color: '#0984e3' },
+    'R-D+T-F+': { emoji: '🔮', name: '무의식 가입자', code: 'R-D+T-F+', tip: '보험 점검 한번 해볼까요?', color: '#6c5ce7' },
+    'R-D+T-F-': { emoji: '🕵️', name: '숨은 투자가', code: 'R-D+T-F-', tip: '투자 현황 체크해보세요', color: '#a29bfe' },
+    'R-D-T+F+': { emoji: '⏰', name: '노후 무방비', code: 'R-D-T+F+', tip: '노후 준비, 지금 시작이 좋아요', color: '#e17055' },
+    'R-D-T+F-': { emoji: '🚀', name: 'YOLO 투자러', code: 'R-D-T+F-', tip: '일단 투자! 근데 보험도 조금?', color: '#fdcb6e' },
+    'R-D-T-F+': { emoji: '🐣', name: '순수 무방비', code: 'R-D-T-F+', tip: '걱정 마세요, 지금 시작하면 OK', color: '#f8a5c2' },
+    'R-D-T-F-': { emoji: '🎲', name: '진정한 YOLO', code: 'R-D-T-F-', tip: '리스크? 그게 뭐죠? (근데 한번 생각해봐요)', color: '#ff6b6b' }
 };
 
 // Screen navigation
@@ -44,12 +70,28 @@ function selectGender(btn) {
     updateNextButton(1);
 }
 
+// Age validation (0-99)
+function validateAge(input) {
+    let value = parseInt(input.value);
+    if (isNaN(value) || value < 0) {
+        input.value = 0;
+    } else if (value > 99) {
+        input.value = 99;
+    }
+}
+
 function updateNextButton(questionNum) {
     const btn = document.querySelector(`#q${questionNum} .btn-next`);
+    if (!btn) return;
+
     if (questionNum === 1) {
         btn.disabled = !answers.gender;
     } else if (questionNum === 3) {
         btn.disabled = answers.monthlyBudget === null;
+    } else if (questionNum === 4) {
+        btn.disabled = answers.timeOrientation === null;
+    } else if (questionNum === 5) {
+        btn.disabled = answers.financePref === null;
     }
 }
 
@@ -59,6 +101,10 @@ function nextQuestion(currentQ) {
         showScreen('q2');
     } else if (currentQ === 2) {
         showScreen('q3');
+    } else if (currentQ === 3) {
+        showScreen('q4');
+    } else if (currentQ === 4) {
+        showScreen('q5');
     }
 }
 
@@ -82,17 +128,48 @@ function selectBudget(btn) {
     document.querySelector('#q3 .btn-next').disabled = false;
 }
 
-// Calculate result
+// Question 4: Time Orientation (NEW)
+function selectTime(btn) {
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers.timeOrientation = btn.dataset.value;
+    document.querySelector('#q4 .btn-next').disabled = false;
+}
+
+// Question 5: Finance Preference (NEW)
+function selectFinance(btn) {
+    document.querySelectorAll('.finance-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers.financePref = btn.dataset.value;
+    document.querySelector('#q5 .btn-next').disabled = false;
+}
+
+// Calculate 16-type result
 function calculateResult() {
+    // Calculate 4 axes for 16 types
+
+    // R (Risk Awareness): + if family history exists or health interest
+    const R = answers.familyHistory.length > 0 ? '+' : '-';
+
+    // D (Defense Action): + if monthly budget >= 20
+    const D = answers.monthlyBudget >= 20 ? '+' : '-';
+
+    // T (Time Orientation): + if long-term focused
+    const T = answers.timeOrientation === 'long' ? '+' : '-';
+
+    // F (Financial Preference): + if stable preference
+    const F = answers.financePref === 'stable' ? '+' : '-';
+
+    // Build type code
+    const typeCode = `R${R}D${D}T${T}F${F}`;
+
     // Find main disease to prepare for
-    let mainDisease = '뇌혈관질환'; // default
+    let mainDisease = '뇌혈관질환';
     let maxRisk = 0;
 
-    // If family history exists, prioritize those
     if (answers.familyHistory.length > 0) {
         mainDisease = answers.familyHistory[0];
     } else {
-        // Find highest risk based on age and gender
         for (const [disease, data] of Object.entries(DISEASE_DATA)) {
             const ageDiff = Math.abs(answers.age - data.peakAge);
             const adjustedRisk = data.riskPercent * (1 - ageDiff / 100);
@@ -105,10 +182,10 @@ function calculateResult() {
 
     const diseaseData = DISEASE_DATA[mainDisease];
 
-    // Calculate peak age (adjusted for family history)
+    // Calculate peak age
     let peakAge = diseaseData.peakAge;
     if (answers.familyHistory.includes(mainDisease)) {
-        peakAge -= 5; // Earlier risk with family history
+        peakAge -= 5;
     }
 
     // Calculate risk percent
@@ -117,34 +194,37 @@ function calculateResult() {
         riskPercent = Math.min(riskPercent * 1.5, 25);
     }
 
-    // Calculate expected cost with inflation
+    // 치료 중간 시점 나이 기준 연령대 계산
+    const treatmentMidpointAge = answers.age + Math.floor(diseaseData.treatmentMonths / 2 / 12);
+    const incomeAgeGroup = Math.floor(treatmentMidpointAge / 10) * 10;
+    const medianIncome = MEDIAN_INCOME[incomeAgeGroup] || MEDIAN_INCOME[40];
+
+    // 직접 비용: 치료비 + 간병비 (인플레이션 반영)
     const yearsToRisk = Math.max(peakAge - answers.age, 0);
-    const inflationRate = 1.05;
-    const expectedCost = Math.round(diseaseData.avgCost * Math.pow(inflationRate, yearsToRisk));
+    const inflationRate = 1.03; // 의료비 인플레이션 3%
+    const directCost = Math.round(diseaseData.directCost * Math.pow(inflationRate, yearsToRisk));
+
+    // 간접 비용: 수입 중단 = 중위소득 × 치료기간
+    const indirectCost = medianIncome * diseaseData.treatmentMonths;
+
+    // 총 비용
+    const totalCost = directCost + indirectCost;
 
     // Calculate defense percentage
-    // Assumptions: 20만원/월 = 약 50% 방어력
     const defensePercent = Math.min(Math.round(answers.monthlyBudget * 2.5), 100);
 
-    // Determine type
-    let type;
-    if (defensePercent >= 80) {
-        type = 'SAFE';
-    } else if (defensePercent >= 40) {
-        type = 'PREP';
-    } else if (defensePercent >= 15) {
-        type = 'HOPE';
-    } else {
-        type = 'YOLO';
-    }
-
     return {
+        typeCode,
         mainDisease,
         peakAge,
         riskPercent: Math.round(riskPercent),
-        expectedCost,
-        defensePercent,
-        type
+        directCost,
+        indirectCost,
+        totalCost,
+        treatmentMonths: diseaseData.treatmentMonths,
+        medianIncome,
+        incomeAgeGroup,
+        defensePercent
     };
 }
 
@@ -154,30 +234,43 @@ function showResult() {
 
     setTimeout(() => {
         const result = calculateResult();
-        const typeData = TYPES[result.type];
+        const typeData = TYPES_16[result.typeCode];
 
         // Update UI
         document.getElementById('typeEmoji').textContent = typeData.emoji;
         document.getElementById('typeName').textContent = typeData.name;
-        document.getElementById('typeDesc').textContent = typeData.desc;
         document.getElementById('mainDisease').textContent = result.mainDisease;
         document.getElementById('peakAge').textContent = `${result.peakAge}세 (${result.riskPercent}%)`;
-        document.getElementById('expectedCost').textContent = `${result.expectedCost.toLocaleString()}만원`;
+
+        // 비용 표시 (직접/간접/총)
+        document.getElementById('directCost').textContent = `${result.directCost.toLocaleString()}만원`;
+        document.getElementById('indirectCost').textContent = `${result.indirectCost.toLocaleString()}만원`;
+        document.getElementById('totalCost').textContent = `${result.totalCost.toLocaleString()}만원`;
+        document.getElementById('treatmentInfo').textContent =
+            `${result.treatmentMonths}개월 기준, ${result.incomeAgeGroup}대 중위소득 ${result.medianIncome}만원/월`;
+
         document.getElementById('defensePercent').textContent = `${result.defensePercent}%`;
         document.getElementById('defenseFill').style.width = `${result.defensePercent}%`;
         document.getElementById('resultTip').textContent = `💡 "${typeData.tip}"`;
+
+        // Update colors based on type
+        document.getElementById('resultCard').style.borderTop = `4px solid ${typeData.color}`;
+
+        // Update Instagram card
+        updateInstaCard({
+            emoji: typeData.emoji,
+            typeName: typeData.name,
+            typeCode: result.typeCode,
+            disease: result.mainDisease,
+            totalCost: result.totalCost,
+            defensePercent: result.defensePercent
+        });
 
         showScreen('result');
     }, 1500);
 }
 
-// Share functions
-function shareKakao() {
-    // Kakao SDK would be integrated here
-    // For MVP, just show alert
-    alert('카카오톡 공유 기능은 실제 배포 시 활성화됩니다!\n\n지금은 이미지 저장으로 공유해주세요 📱');
-}
-
+// Share functions (Instagram/X focus)
 async function saveImage() {
     const card = document.getElementById('resultCard');
 
@@ -198,7 +291,6 @@ async function saveImage() {
 }
 
 function goToDetail() {
-    // Redirect to full simulator
     window.location.href = '../index.html';
 }
 
@@ -208,11 +300,51 @@ function retry() {
     answers.age = 40;
     answers.familyHistory = [];
     answers.monthlyBudget = 0;
+    answers.timeOrientation = null;
+    answers.financePref = null;
 
     // Reset UI
-    document.querySelectorAll('.gender-btn, .disease-btn, .budget-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.gender-btn, .disease-btn, .budget-btn, .time-btn, .finance-btn')
+        .forEach(b => b.classList.remove('selected'));
     document.getElementById('ageInput').value = 40;
     document.querySelectorAll('.btn-next').forEach(b => b.disabled = true);
 
     showScreen('intro');
+}
+
+// Instagram Story 저장
+function saveInstaStory() {
+    const instaCard = document.getElementById('instaCard');
+
+    // 캡처 전 화면에 잠시 표시 (html2canvas 필요)
+    instaCard.style.left = '0';
+    instaCard.style.position = 'fixed';
+    instaCard.style.zIndex = '9999';
+
+    html2canvas(instaCard, {
+        width: 360,
+        height: 640,
+        scale: 3, // 1080x1920 고해상도
+        useCORS: true,
+        backgroundColor: null
+    }).then(canvas => {
+        // 다시 숨기기
+        instaCard.style.left = '-9999px';
+
+        // 다운로드
+        const link = document.createElement('a');
+        link.download = '건강방어유형_인스타스토리.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
+
+// 인스타 카드 데이터 업데이트
+function updateInstaCard(result) {
+    document.getElementById('instaEmoji').textContent = result.emoji;
+    document.getElementById('instaTypeName').textContent = result.typeName;
+    document.getElementById('instaDisease').textContent = result.disease;
+    document.getElementById('instaCost').textContent = result.totalCost.toLocaleString() + '만원';
+    document.getElementById('instaDefensePercent').textContent = result.defensePercent + '%';
+    document.getElementById('instaDefenseFill').style.width = result.defensePercent + '%';
 }
