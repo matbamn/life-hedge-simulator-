@@ -34,20 +34,20 @@ const MEDIAN_INCOME = {
 
 // 16 Type definitions (R/D/T/F)
 const TYPES_16 = {
-    'R+D+T+F+': { emoji: '🧤', name: '철벽 골키퍼', code: 'R+D+T+F+', tip: '완벽한 수비! 유지만 잘 하세요 👍', color: '#6bcb77' },
-    'R+D+T+F-': { emoji: '⚔️', name: '공격형 수비수', code: 'R+D+T+F-', tip: '투자로 더 크게 모아보세요!', color: '#4ecdc4' },
+    'R+D+T+F+': { emoji: '🧤', name: '철벽 골키퍼', code: 'R+D+T+F+', tip: '완벽한 수비! 건강 유지만 잘 하세요 👍', color: '#6bcb77' },
+    'R+D+T+F-': { emoji: '⚔️', name: '공격형 수비수', code: 'R+D+T+F-', tip: '장기적인 재정 계획을 세워보세요!', color: '#4ecdc4' },
     'R+D+T-F+': { emoji: '🎯', name: '선제 방어러', code: 'R+D+T-F+', tip: '조기 대비 완료! 잘하고 있어요', color: '#45b7d1' },
-    'R+D+T-F-': { emoji: '💹', name: '젊은 투자가', code: 'R+D+T-F-', tip: '시간이 편이에요, 투자 유지!', color: '#96ceb4' },
+    'R+D+T-F-': { emoji: '💹', name: '젊은 준비생', code: 'R+D+T-F-', tip: '시간이 편이에요, 꾸준히 준비해요!', color: '#96ceb4' },
     'R+D-T+F+': { emoji: '📝', name: '계획만 세움', code: 'R+D-T+F+', tip: '알고 계시니 이제 행동만!', color: '#ffeaa7' },
-    'R+D-T+F-': { emoji: '💭', name: '몽상가', code: 'R+D-T+F-', tip: '투자 꿈, 지금 시작해요!', color: '#dfe6e9' },
-    'R+D-T-F+': { emoji: '😰', name: '걱정만 함', code: 'R+D-T-F+', tip: '소액이라도 지금 시작!', color: '#fab1a0' },
-    'R+D-T-F-': { emoji: '🌈', name: '낙천 미루미', code: 'R+D-T-F-', tip: '괜찮겠지~ 하지만 작은 시작은?', color: '#fd79a8' },
+    'R+D-T+F-': { emoji: '💭', name: '몽상가', code: 'R+D-T+F-', tip: '건강 목표, 작은 것부터 시작해요!', color: '#dfe6e9' },
+    'R+D-T-F+': { emoji: '😰', name: '걱정만 함', code: 'R+D-T-F+', tip: '소액이라도 건강 대비 시작!', color: '#fab1a0' },
+    'R+D-T-F-': { emoji: '🌈', name: '낙천 미루미', code: 'R+D-T-F-', tip: '괜찮겠지~ 하지만 작은 준비는?', color: '#fd79a8' },
     'R-D+T+F+': { emoji: '🍀', name: '우연한 수비수', code: 'R-D+T+F+', tip: '잘 준비되어 있어요! 점검만', color: '#00b894' },
-    'R-D+T+F-': { emoji: '🎰', name: '행운의 투자가', code: 'R-D+T+F-', tip: '투자 잘하고 있어요!', color: '#0984e3' },
-    'R-D+T-F+': { emoji: '🔮', name: '무의식 가입자', code: 'R-D+T-F+', tip: '보험 점검 한번 해볼까요?', color: '#6c5ce7' },
-    'R-D+T-F-': { emoji: '🕵️', name: '숨은 투자가', code: 'R-D+T-F-', tip: '투자 현황 체크해보세요', color: '#a29bfe' },
-    'R-D-T+F+': { emoji: '⏰', name: '노후 무방비', code: 'R-D-T+F+', tip: '노후 준비, 지금 시작이 좋아요', color: '#e17055' },
-    'R-D-T+F-': { emoji: '🚀', name: 'YOLO 투자러', code: 'R-D-T+F-', tip: '일단 투자! 근데 보험도 조금?', color: '#fdcb6e' },
+    'R-D+T+F-': { emoji: '🎰', name: '행운의 준비생', code: 'R-D+T+F-', tip: '재정 현황 한번 점검해보세요!', color: '#0984e3' },
+    'R-D+T-F+': { emoji: '🔮', name: '무의식 가입자', code: 'R-D+T-F+', tip: '건강 대비 현황 점검해볼까요?', color: '#6c5ce7' },
+    'R-D+T-F-': { emoji: '🕵️', name: '숨은 준비생', code: 'R-D+T-F-', tip: '재정 현황 체크해보세요', color: '#a29bfe' },
+    'R-D-T+F+': { emoji: '⏰', name: '노후 무방비', code: 'R-D-T+F+', tip: '노후 대비, 지금 시작이 좋아요', color: '#e17055' },
+    'R-D-T+F-': { emoji: '🚀', name: 'YOLO족', code: 'R-D-T+F-', tip: '즐기는 것도 좋지만, 건강도 챙겨요!', color: '#fdcb6e' },
     'R-D-T-F+': { emoji: '🐣', name: '순수 무방비', code: 'R-D-T-F+', tip: '걱정 마세요, 지금 시작하면 OK', color: '#f8a5c2' },
     'R-D-T-F-': { emoji: '🎲', name: '진정한 YOLO', code: 'R-D-T-F-', tip: '리스크? 그게 뭐죠? (근데 한번 생각해봐요)', color: '#ff6b6b' }
 };
