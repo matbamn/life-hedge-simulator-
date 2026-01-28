@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life-Hedge Simulator | 생애 헤지 시뮬레이터</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <h1>Life-Hedge Simulator</h1>
+      </div>
+      <p class="tagline">당신의 신체는 <span class="highlight">감가상각 자산</span>입니다. 미래의 리스크를 헷지하세요.</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Input Panel -->
+      <section class="panel input-panel">
+        <h2>📋 기본 정보</h2>
+
+        <div class="input-group">
+          <label for="gender">성별</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="gender" value="남" checked> 남성
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gender" value="여"> 여성
+            </label>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <label for="currentAge">현재 나이</label>
+            <input type="number" id="currentAge" value="40" min="20" max="80">
+          </div>
+          <div class="input-group">
+            <label for="retireAge">은퇴 나이</label>
+            <input type="number" id="retireAge" value="65" min="50" max="90">
+          </div>
+        </div>
+
+        <h3>🧬 가족력</h3>
+        <div class="checkbox-grid">
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="위암"> 위암
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="대장암"> 대장암
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="폐암"> 폐암
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="간암"> 간암
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="유방암"> 유방암
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="뇌혈관질환"> 뇌혈관
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="허혈성심질환"> 심장
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="familyHistory" value="치매"> 치매
+          </label>
+        </div>
+
+        <h3>🛡️ 보험 (Defense)</h3>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="insuranceCancer">암 진단금 (만원)</label>
+            <input type="number" id="insuranceCancer" value="3000" min="0" step="100">
+          </div>
+          <div class="input-group">
+            <label for="insuranceBrain">뇌 진단금 (만원)</label>
+            <input type="number" id="insuranceBrain" value="2000" min="0" step="100">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="insuranceHeart">심장 진단금 (만원)</label>
+            <input type="number" id="insuranceHeart" value="2000" min="0" step="100">
+          </div>
+          <div class="input-group">
+            <label for="insuranceExpire">보험 만기 나이</label>
+            <input type="number" id="insuranceExpire" value="80" min="60" max="100">
+          </div>
+        </div>
+
+        <h3>⚔️ 투자 (Offense)</h3>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="currentAsset">현재 자산 (만원)</label>
+            <input type="number" id="currentAsset" value="5000" min="0" step="100">
+          </div>
+          <div class="input-group">
+            <label for="monthlyInvest">월 투자액 (만원)</label>
+            <input type="number" id="monthlyInvest" value="50" min="0" step="10">
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="expectedReturn">예상 수익률 (%/년)</label>
+          <input type="range" id="expectedReturn" value="5" min="0" max="15" step="0.5">
+          <span id="returnValue" class="range-value">5%</span>
+        </div>
+
+        <button id="simulateBtn" class="btn-primary">🎮 시뮬레이션 시작</button>
+      </section>
+
+      <!-- Results Panel -->
+      <section class="panel results-panel">
+        <h2>📊 시뮬레이션 결과</h2>
+
+        <!-- Risk Guide -->
+        <div class="risk-guide">
+          <h4>📖 발병 확률 해석 가이드</h4>
+          <div class="guide-items">
+            <span class="guide-item safe">💚 &lt;1% 낮음</span>
+            <span class="guide-item caution">🟡 1~2% 주의</span>
+            <span class="guide-item warning">🟠 2~5% 높음</span>
+            <span class="guide-item danger">🔴 &gt;5% 매우높음</span>
+          </div>
+          <p class="guide-note">※ 50세 이전 1% 이상 = 조기 발병 고위험</p>
+        </div>
+
+        <!-- Risk Heatmap -->
+        <div class="chart-container">
+          <h3>🔥 생애 리스크 히트맵</h3>
+          <p class="chart-desc">나이별 발병 확률 - <span style="color:#ff6b6b">붉은 영역</span>은 위험 구간</p>
+          <canvas id="heatmapChart"></canvas>
+        </div>
+
+        <!-- Early Onset Simulation -->
+        <div class="chart-container early-onset-section">
+          <h3>⏰ 조기 발병 시뮬레이션</h3>
+          <p class="chart-desc">"만약 X세에 병이 생기면?" - 보험이 유리? 투자가 유리?</p>
+          <div class="early-onset-controls">
+            <label>발병 시점 선택:</label>
+            <select id="earlyOnsetAge">
+              <option value="45">45세 (조기)</option>
+              <option value="50">50세</option>
+              <option value="55" selected>55세</option>
+              <option value="60">60세</option>
+              <option value="65">65세</option>
+              <option value="70">70세</option>
+              <option value="75">75세</option>
+            </select>
+            <select id="earlyOnsetDisease">
+              <option value="위암">위암</option>
+              <option value="대장암">대장암</option>
+              <option value="폐암">폐암</option>
+              <option value="뇌혈관질환" selected>뇌혈관질환</option>
+              <option value="허혈성심질환">심장질환</option>
+              <option value="치매">치매</option>
+            </select>
+            <button id="simulateEarlyBtn" class="btn-secondary">시뮬레이션</button>
+          </div>
+          <div id="earlyOnsetResult" class="early-onset-result">
+            <!-- Dynamic result will be inserted here -->
+          </div>
+        </div>
+
+        <!-- Cost Comparison -->
+        <div class="chart-container">
+          <h3>💰 질병 발생 시 비용 vs 보험/투자</h3>
+          <p class="chart-desc">같은 보험료를 투자했을 때 비교 (투자 손실 가능성 포함)</p>
+          <canvas id="battleChart"></canvas>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertBox" class="alert-box">
+          <!-- Dynamic alerts will be inserted here -->
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="summary-grid" id="summaryGrid">
+          <!-- Dynamic stats will be inserted here -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>데이터 출처: HIRA 보건의료빅데이터개방시스템 (2024), 통계청 인구현황 (2024.12)</p>
+      <p class="disclaimer">⚠️ 본 시뮬레이터는 참고용이며, 실제 의료/재정 상담을 대체하지 않습니다.</p>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
