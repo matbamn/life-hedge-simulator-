@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 건강 방어 유형 테스트 🛡️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app">
+    <!-- Intro Screen -->
+    <div id="intro" class="screen active">
+      <div class="intro-content">
+        <div class="intro-emoji">🛡️</div>
+        <h1>내 건강 방어 유형은?</h1>
+        <p class="intro-desc">
+          3개의 질문으로 알아보는<br>
+          나의 건강 리스크 & 방어력 테스트
+        </p>
+        <div class="intro-tags">
+          <span class="tag">🎮 MBTI 스타일</span>
+          <span class="tag">📊 실제 데이터</span>
+          <span class="tag">⏱️ 30초</span>
+        </div>
+        <button class="btn-start" onclick="startQuiz()">시작하기 →</button>
+        <p class="intro-note">데이터 출처: HIRA 보건의료빅데이터 (2024)</p>
+      </div>
+    </div>
+
+    <!-- Question 1: Gender & Age -->
+    <div id="q1" class="screen question-screen">
+      <div class="progress-bar">
+        <div class="progress" style="width: 33%"></div>
+      </div>
+      <div class="question-content">
+        <span class="q-number">Q1</span>
+        <h2>성별과 나이를 알려주세요</h2>
+        <div class="gender-select">
+          <button class="gender-btn" data-value="남" onclick="selectGender(this)">👨 남성</button>
+          <button class="gender-btn" data-value="여" onclick="selectGender(this)">👩 여성</button>
+        </div>
+        <div class="age-input">
+          <label>현재 나이</label>
+          <div class="age-input-wrapper">
+            <input type="number" id="ageInput" placeholder="예: 35" min="20" max="80" value="40">
+            <span class="age-unit">세</span>
+          </div>
+        </div>
+        <button class="btn-next" onclick="nextQuestion(1)" disabled>다음 →</button>
+      </div>
+    </div>
+
+    <!-- Question 2: Family History -->
+    <div id="q2" class="screen question-screen">
+      <div class="progress-bar">
+        <div class="progress" style="width: 66%"></div>
+      </div>
+      <div class="question-content">
+        <span class="q-number">Q2</span>
+        <h2>가족력이 있는 질병이 있나요?</h2>
+        <p class="q-hint">부모님/조부모님 중 해당 질병 경험자가 있다면 선택</p>
+        <div class="disease-grid">
+          <button class="disease-btn" data-value="위암" onclick="toggleDisease(this)">🫁 위암</button>
+          <button class="disease-btn" data-value="대장암" onclick="toggleDisease(this)">🔴 대장암</button>
+          <button class="disease-btn" data-value="폐암" onclick="toggleDisease(this)">🫁 폐암</button>
+          <button class="disease-btn" data-value="뇌혈관질환" onclick="toggleDisease(this)">🧠 뇌혈관</button>
+          <button class="disease-btn" data-value="허혈성심질환" onclick="toggleDisease(this)">❤️ 심장</button>
+          <button class="disease-btn" data-value="치매" onclick="toggleDisease(this)">🧓 치매</button>
+        </div>
+        <button class="btn-skip" onclick="nextQuestion(2)">없음 / 모름</button>
+        <button class="btn-next" onclick="nextQuestion(2)">다음 →</button>
+      </div>
+    </div>
+
+    <!-- Question 3: Current Defense -->
+    <div id="q3" class="screen question-screen">
+      <div class="progress-bar">
+        <div class="progress" style="width: 100%"></div>
+      </div>
+      <div class="question-content">
+        <span class="q-number">Q3</span>
+        <h2>현재 건강을 위해 얼마나 쓰고 있나요?</h2>
+        <p class="q-hint">보험료 + 건강 관련 투자/저축 월 합계</p>
+        <div class="budget-options">
+          <button class="budget-btn" data-value="0" onclick="selectBudget(this)">아직 없어요 🙈</button>
+          <button class="budget-btn" data-value="20" onclick="selectBudget(this)">~20만원</button>
+          <button class="budget-btn" data-value="50" onclick="selectBudget(this)">20~50만원</button>
+          <button class="budget-btn" data-value="100" onclick="selectBudget(this)">50만원 이상 💪</button>
+        </div>
+        <button class="btn-next" onclick="showResult()" disabled>결과 보기 🎉</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="screen">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>분석 중...</p>
+        <p class="loading-sub">HIRA 데이터 기반으로 계산 중이에요</p>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="screen">
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <span class="result-tag">🎮 당신의 건강 방어 유형</span>
+        </div>
+        <div class="result-type">
+          <span class="type-emoji" id="typeEmoji">⚖️</span>
+          <h2 class="type-name" id="typeName">PREP형</h2>
+          <p class="type-desc" id="typeDesc">준비된 현실주의자</p>
+        </div>
+        <div class="result-data">
+          <div class="data-row">
+            <span class="data-icon">🎯</span>
+            <span class="data-label">주요 대비 질병</span>
+            <span class="data-value" id="mainDisease">뇌혈관질환</span>
+          </div>
+          <div class="data-row">
+            <span class="data-icon">📅</span>
+            <span class="data-label">피크 시기</span>
+            <span class="data-value" id="peakAge">58세 (12%)</span>
+          </div>
+          <div class="data-row">
+            <span class="data-icon">💰</span>
+            <span class="data-label">예상 치료비</span>
+            <span class="data-value" id="expectedCost">8,500만원</span>
+          </div>
+        </div>
+        <div class="defense-bar">
+          <div class="defense-label">
+            <span>🛡️ 방어력</span>
+            <span class="defense-percent" id="defensePercent">42%</span>
+          </div>
+          <div class="defense-track">
+            <div class="defense-fill" id="defenseFill" style="width: 42%"></div>
+          </div>
+        </div>
+        <div class="result-tip" id="resultTip">
+          💡 "58세 전에 방어력 한번 점검해봐!"
+        </div>
+        <p class="result-source">데이터: HIRA 보건의료빅데이터 (2024)</p>
+      </div>
+      <div class="result-actions">
+        <button class="btn-share" onclick="shareKakao()">📱 카카오톡 공유</button>
+        <button class="btn-save" onclick="saveImage()">💾 이미지 저장</button>
+        <button class="btn-detail" onclick="goToDetail()">📊 상세 분석 보기</button>
+        <button class="btn-retry" onclick="retry()">🔄 다시 하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="quiz.js"></script>
+</body>
+
+</html>

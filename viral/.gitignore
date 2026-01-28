@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node (나중에 필요하면)
+node_modules/
+npm-debug.log
+
+# 빌드 결과물
+dist/
+build/
+
+# 환경 변수
+.env
+.env.local
+
+# 임시 파일
+*.tmp
+*.temp
