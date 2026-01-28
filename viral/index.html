@@ -150,60 +150,66 @@
     <!-- Result -->
     <div id="result" class="screen">
       <div class="result-card" id="resultCard">
+        <!-- 상단 디스클레이머 -->
+        <div class="result-disclaimer-top">
+          ⚠️ 이 테스트는 재미를 위한 통계 비교입니다<br>
+          의학적 진단이나 금융 조언이 아닙니다
+        </div>
         <div class="result-header">
-          <span class="result-tag">🎮 당신의 건강 방어 유형</span>
+          <span class="result-tag">🎮 통계상 건강 방어 유형</span>
         </div>
         <div class="result-type">
           <span class="type-emoji" id="typeEmoji">⚖️</span>
           <h2 class="type-name" id="typeName">PREP형</h2>
+          <p class="type-subtext">이 조건의 사람들이 가까운 유형</p>
         </div>
         <div class="result-data">
           <div class="data-row">
             <span class="data-icon">🎯</span>
-            <span class="data-label">주요 대비 질병</span>
+            <span class="data-label">통계상 주의 질병군</span>
             <span class="data-value" id="mainDisease">뇌혈관질환</span>
           </div>
           <div class="data-row">
             <span class="data-icon">📅</span>
-            <span class="data-label">피크 시기</span>
+            <span class="data-label">평균 발병 연령대</span>
             <span class="data-value" id="peakAge">58세 (12%)</span>
           </div>
-          <p class="data-note">* 가족력 + 나이 기반, HIRA 2024 통계</p>
+          <p class="data-note">* 가족력 조건 기준, HIRA 2024 통계 평균</p>
         </div>
 
         <!-- 비용 분석 섹션 -->
         <div class="cost-section">
           <div class="cost-row">
-            <span class="cost-label">💊 직접 비용</span>
+            <span class="cost-label">💊 평균 직접 비용</span>
             <span class="cost-value" id="directCost">1,500만원</span>
-            <span class="cost-desc">치료비 + 간병비</span>
+            <span class="cost-desc">치료비 + 간병비 (통계 평균)</span>
           </div>
           <div class="cost-row">
-            <span class="cost-label">📉 간접 비용</span>
+            <span class="cost-label">📉 평균 간접 비용</span>
             <span class="cost-value" id="indirectCost">6,000만원</span>
-            <span class="cost-desc">수입 중단 손실</span>
+            <span class="cost-desc">수입 중단 손실 (통계 평균)</span>
           </div>
           <div class="cost-divider"></div>
           <div class="cost-row cost-total">
-            <span class="cost-label">💰 총 예상 비용</span>
+            <span class="cost-label">💰 통계 평균 비용</span>
             <span class="cost-value" id="totalCost">7,500만원</span>
           </div>
-          <p class="cost-note" id="treatmentInfo">18개월 기준, 450만원/월 평균소득</p>
+          <p class="cost-note" id="treatmentInfo">* 실제 비용은 개인마다 천차만별입니다</p>
         </div>
         <div class="defense-bar">
           <div class="defense-label">
-            <span>🛡️ 방어력</span>
+            <span>📊 통계 대비 준비도</span>
             <span class="defense-percent" id="defensePercent">42%</span>
           </div>
           <div class="defense-track">
             <div class="defense-fill" id="defenseFill" style="width: 42%"></div>
           </div>
+          <p class="defense-note">현재 건강투자 ÷ 평균 의료비 예상액</p>
         </div>
         <div class="result-tip" id="resultTip">
-          💡 "58세 전에 방어력 한번 점검해봐!"
+          💡 "이건 그냥 통계 비교일 뿐, 참고만 하세요!"
         </div>
         <p class="result-source">데이터: HIRA 보건의료빅데이터 (2024)</p>
-        <p class="result-disclaimer">※ 본 결과는 재미를 위한 것이며, 전문적인 금융·의료 조언이 아닙니다.</p>
       </div>
       <div class="result-actions">
         <button class="btn-share" onclick="copyLink()">🔗 링크 복사해서 공유</button>
@@ -218,22 +224,22 @@
       <div class="insta-bg"></div>
       <div class="insta-content">
         <div class="insta-header">
-          <span class="insta-badge">🛡️ 내 건강 방어 유형</span>
+          <span class="insta-badge">📊 통계상 건강 유형</span>
         </div>
         <div class="insta-type">
           <span class="insta-emoji" id="instaEmoji">🧘</span>
           <h2 class="insta-type-name" id="instaTypeName">선제 방어러</h2>
         </div>
         <div class="insta-disease">
-          <p class="insta-label">주요 대비 질병</p>
+          <p class="insta-label">통계상 주의 질병군</p>
           <p class="insta-value" id="instaDisease">뇌혈관질환</p>
         </div>
         <div class="insta-cost">
-          <p class="insta-cost-label">예상 총 비용</p>
+          <p class="insta-cost-label">통계 평균 비용</p>
           <p class="insta-cost-value" id="instaCost">1억 303만원</p>
         </div>
         <div class="insta-defense">
-          <p class="insta-defense-label">현재 방어력</p>
+          <p class="insta-defense-label">통계 대비 준비도</p>
           <div class="insta-defense-bar">
             <div class="insta-defense-fill" id="instaDefenseFill"></div>
           </div>
